@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Sentiment Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <section id="input-section" class="card">
+            <h1>Customer Sentiment Analysis</h1>
+            <form id="upload-form">
+                <label for="text-feedback">Enter Feedback:</label>
+                <textarea id="text-feedback" name="text_feedback" rows="5" placeholder="Type one feedback entry per line..."></textarea>
+                <div class="separator"><span>Or Upload File</span></div>
+                <input type="file" id="file-input" name="file" accept=".csv, .xlsx, .xls, .pdf">
+                <div id="loader" class="loader" style="display: none;"></div>
+                <p id="error-message" class="error-text"></p>
+                <button type="submit">Analyze</button>
+            </form>
+            <div class="navigation-buttons">
+                <button id="view-past-results-btn" class="btn-nav">View Past Results</button>
+                <button id="view-charts-btn" class="btn-nav-outline">View Charts</button>
+                <button id="view-trends-btn" class="btn-nav">View Trends</button>
+            </div>
+        </section>
+
+        <section id="summary-section" class="card hidden">
+            <h2>Analysis Summary</h2>
+            <div id="summary-content"></div>
+            <div class="download-buttons">
+                <a id="download-csv-btn" class="btn-download" href="#" target="_blank">Download CSV</a>
+                <a id="download-pdf-btn" class="btn-download" href="#" target="_blank">Download PDF</a>
+            </div>
+        </section>
+
+        <section id="charts-section" class="hidden">
+            <div class="section-header">
+                <h2 id="results-title">Analysis Charts</h2>
+                <button class="back-btn">&larr; Back to Input</button>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Sentiment Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Emotion Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="emotionChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Feedback Categories</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Urgency Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="urgencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="trends-section" class="hidden">
+             <div class="section-header">
+                <h2>Sentiment Over Time</h2>
+                <button class="back-btn">&larr; Back to Input</button>
+            </div>
+            <div class="card">
+                <div class="chart-wrapper-trends">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="history-section" class="hidden">
+            <div class="section-header">
+                <h2>Past Results</h2>
+                <button class="back-btn">&larr; Back to Input</button>
+            </div>
+            <div class="card filter-controls">
+                <select id="sentiment-filter"><option value="">Filter by Sentiment</option><option value="Positive">Positive</option><option value="Negative">Negative</option><option value="Neutral">Neutral</option></select>
+                <select id="emotion-filter"><option value="">Filter by Emotion</option><option value="Joy">Joy</option><option value="Anger">Anger</option><option value="Sadness">Sadness</option><option value="Fear">Fear</option><option value="Surprise">Surprise</option><option value="Neutral">Neutral</option></select>
+                <select id="category-filter"><option value="">Filter by Category</option><option value="Product">Product</option><option value="Service">Service</option><option value="Delivery">Delivery</option><option value="General">General</option></select>
+                <select id="urgency-filter"><option value="">Filter by Urgency</option><option value="Critical">Critical</option><option value="High">High</option><option value="Normal">Normal</option></select>
+                <button id="export-csv-btn" class="btn-export">Export CSV</button>
+                <button id="reset-filters-btn">Reset</button>
+                <button id="clear-all-btn" class="btn-danger">Clear All Data</button>
+            </div>
+            <div class="table-container card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feedback</th><th>Sentiment</th><th>Confidence</th><th>Emotion</th><th>Category</th><th>Urgency</th><th>Date</th><th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
