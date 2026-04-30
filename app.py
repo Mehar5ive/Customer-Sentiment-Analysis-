@@ -20,8 +20,6 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['UPLOAD_FOLDER'] = 'uploads'
-
-# Use environment variable for DB (future-proof)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
     "DATABASE_URL", "sqlite:///analysis_history.db"
 )
@@ -32,7 +30,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 db = SQLAlchemy(app)
 
-# -------------------- NLTK Setup (safe) --------------------
+# NLTK Setup 
 try:
     nltk.data.find('sentiment/vader_lexicon')
 except LookupError:
@@ -41,7 +39,7 @@ except LookupError:
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 analyzer = SentimentIntensityAnalyzer()
 
-# -------------------- Custom Word Scores --------------------
+# Custom Word Scores 
 new_words = {
     'trash': -3.5, 'garbage': -3.5, 'unacceptable': -4.0,
     'disaster': -4.0, 'subpar': -3.0, 'brilliant': 3.5,
@@ -49,7 +47,7 @@ new_words = {
 }
 analyzer.lexicon.update(new_words)
 
-# -------------------- Database Models --------------------
+# Database Models 
 class AnalysisRun(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     source = db.Column(db.String(100), nullable=False)
@@ -72,7 +70,7 @@ class FeedbackEntry(db.Model):
     category = db.Column(db.String(20))
     urgency = db.Column(db.String(20))
 
-# -------------------- NLP Logic --------------------
+# NLP
 def analyze_text(text):
     scores = analyzer.polarity_scores(text)
 
@@ -109,7 +107,6 @@ def analyze_text(text):
 
     return sentiment, confidence, emotion, category, urgency
 
-# -------------------- Routes --------------------
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -171,8 +168,7 @@ def analyze():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-# -------------------- Run App --------------------
+# run
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="127.0.0.1", port=port, debug=True)
