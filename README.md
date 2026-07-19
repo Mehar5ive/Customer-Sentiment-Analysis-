@@ -3,14 +3,6 @@ A full-stack web application that analyzes customer feedback using Natural Langu
 
 ---
 
-## 🌐 Live Demo
-
-https://capitol-olympus-programmers-brighton.trycloudflare.com/
-
-> ⚠️ Note: This is a temporary live demo. The link may change when the server restarts.
-
----
-
 ## 📌 Features
 
 * 🔍 **Sentiment Analysis** (Positive, Negative, Neutral)
